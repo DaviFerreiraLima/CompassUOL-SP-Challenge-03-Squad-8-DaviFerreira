@@ -1,23 +1,23 @@
-package br.com.compassuol.pb.challenge.msproducts.entity;
+package br.com.compassuol.pb.challenge.msproducts.payload;
 
-import jakarta.persistence.*;
+import br.com.compassuol.pb.challenge.msproducts.entity.Role;
+import jakarta.persistence.Column;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Size;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
-import java.util.List;
 import java.util.Set;
 
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-public class User {
+public class UserDto {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
     @Column(name = "first_name")
@@ -39,9 +39,6 @@ public class User {
     @Size(min = 6, message = "User password should have at least 6 characters")
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_role",
-            joinColumns = @JoinColumn(name="user_id",referencedColumnName = "id"),
-            inverseJoinColumns = @JoinColumn(name ="role_id", referencedColumnName = "id"))
+
     private Set<Role> roles;
 }
