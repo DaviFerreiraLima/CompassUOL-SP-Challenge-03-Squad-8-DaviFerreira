@@ -53,7 +53,7 @@ public class ProductService {
     public ProductDto getProductById(long productId){
         var product = productRepository.findById(productId);
         if (product==null){
-            throw  new ProductAPIException(HttpStatus.BAD_REQUEST,"The product does not exist");
+            throw  new ResourceNotFoundException("Product","id",productId);
         }
         return mapper.map(product,ProductDto.class);
     }

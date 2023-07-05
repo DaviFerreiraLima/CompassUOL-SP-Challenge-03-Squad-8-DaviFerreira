@@ -40,7 +40,7 @@ public class Product {
 
 
     @NotNull(message = "The product price should not be null")
-    @DecimalMin(value = "1")
+    @DecimalMin(value = "1",message = "The product price cant be less than 1")
     private BigDecimal price;
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)

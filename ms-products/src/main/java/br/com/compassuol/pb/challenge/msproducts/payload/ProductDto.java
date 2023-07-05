@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -40,7 +41,7 @@ public class ProductDto {
     private String imgUrl;
 
     @NotNull(message = "The product price should not be null")
-    @DecimalMin(value = "1")
+    @DecimalMin(value = "1",message = "The product price cant be less than 1")
     private BigDecimal price;
 
     private Set<Category> categories;
