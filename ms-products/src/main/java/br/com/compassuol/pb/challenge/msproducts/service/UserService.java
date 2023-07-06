@@ -5,7 +5,9 @@ import br.com.compassuol.pb.challenge.msproducts.entity.Role;
 import br.com.compassuol.pb.challenge.msproducts.entity.User;
 import br.com.compassuol.pb.challenge.msproducts.exception.ProductAPIException;
 import br.com.compassuol.pb.challenge.msproducts.exception.ResourceNotFoundException;
+import br.com.compassuol.pb.challenge.msproducts.payload.EmailDto;
 import br.com.compassuol.pb.challenge.msproducts.payload.UserDto;
+import br.com.compassuol.pb.challenge.msproducts.publisher.RabbitMQProducer;
 import br.com.compassuol.pb.challenge.msproducts.repository.RoleRepository;
 import br.com.compassuol.pb.challenge.msproducts.repository.UserRepository;
 import org.modelmapper.ModelMapper;
@@ -13,9 +15,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -24,10 +24,13 @@ public class UserService {
     private RoleRepository roleRepository;
     private ModelMapper mapper;
 
-    public UserService(UserRepository userRepository, ModelMapper mapper,RoleRepository roleRepository) {
+    private RabbitMQProducer producer;
+
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, ModelMapper mapper, RabbitMQProducer producer) {
         this.userRepository = userRepository;
-        this.mapper = mapper;
         this.roleRepository = roleRepository;
+        this.mapper = mapper;
+        this.producer = producer;
     }
 
     public UserDto createUser(UserDto userDto){
@@ -40,9 +43,13 @@ public class UserService {
         var newUser = mapper.map(userDto, User.class);
         newUser.setRoles(roles);
 
-        newUser = userRepository.save(newUser);
-        return mapper.map(newUser,UserDto.class);
+        var email = buildEmail(newUser);
+        email.setContentType("CREATED ACCOUNT");
 
+        newUser = userRepository.save(newUser);
+        producer.sendMessage(email);
+
+        return mapper.map(newUser,UserDto.class);
     }
 
     public UserDto getUserById(long userId){
@@ -63,7 +70,11 @@ public class UserService {
         user.setId(userId);
         user.setRoles(roles);
 
+        var email = buildEmail(user);
+        email.setContentType("UPDATED ACCOUNT");
+
         var newUser = userRepository.save(user);
+        producer.sendMessage(email);
         return mapper.map(newUser,UserDto.class);
     }
     private Set<Role> getRolesByIds(Set<Role> roles) throws ResourceNotFoundException{
@@ -75,5 +86,18 @@ public class UserService {
             existingRolesList.add(foundRole);
         }
         return existingRolesList;
+    }
+
+    private EmailDto buildEmail(User user){
+        var emailDto = new EmailDto();
+        emailDto.setFromEmail("daviferreilima@gmail.com");
+        emailDto.setFromName("Products Service");
+        emailDto.setTo(user.getEmail());
+        emailDto.setReplyTo("none reply");
+        emailDto.setBody("Thats a great email");
+        emailDto.setSubject("compass");
+        emailDto.setContentType("String");
+
+        return  emailDto;
     }
 }

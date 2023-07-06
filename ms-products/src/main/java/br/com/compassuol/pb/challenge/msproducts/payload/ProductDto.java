@@ -2,7 +2,6 @@ package br.com.compassuol.pb.challenge.msproducts.payload;
 
 import br.com.compassuol.pb.challenge.msproducts.entity.Category;
 import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -11,11 +10,9 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.List;
 import java.util.Set;
 @Getter
 @Setter
