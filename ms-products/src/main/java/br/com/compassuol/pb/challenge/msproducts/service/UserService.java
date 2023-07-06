@@ -43,8 +43,9 @@ public class UserService {
         var newUser = mapper.map(userDto, User.class);
         newUser.setRoles(roles);
 
-        var email = buildEmail(newUser);
-        email.setContentType("CREATED ACCOUNT");
+        var email = buildEmail(newUser.getEmail());
+        email.setSubject("CREATED ACCOUNT");
+        email.setBody("Your account has been created");
 
         newUser = userRepository.save(newUser);
         producer.sendMessage(email);
@@ -70,8 +71,10 @@ public class UserService {
         user.setId(userId);
         user.setRoles(roles);
 
-        var email = buildEmail(user);
-        email.setContentType("UPDATED ACCOUNT");
+        var email = buildEmail(user.getEmail());
+
+        email.setSubject("UPDATED ACCOUNT");
+        email.setBody("Your account information has been updated");
 
         var newUser = userRepository.save(user);
         producer.sendMessage(email);
@@ -88,15 +91,15 @@ public class UserService {
         return existingRolesList;
     }
 
-    private EmailDto buildEmail(User user){
+    private EmailDto buildEmail(String email){
         var emailDto = new EmailDto();
-        emailDto.setFromEmail("daviferreilima@gmail.com");
-        emailDto.setFromName("Products Service");
-        emailDto.setTo(user.getEmail());
-        emailDto.setReplyTo("none reply");
-        emailDto.setBody("Thats a great email");
-        emailDto.setSubject("compass");
-        emailDto.setContentType("String");
+        emailDto.setFromEmail("challengecompass1@gmail.com");
+        emailDto.setFromName("Compass");
+        emailDto.setTo(email);
+        emailDto.setReplyTo("");
+        emailDto.setBody("");
+        emailDto.setSubject("");
+        emailDto.setContentType("text/plain");
 
         return  emailDto;
     }
