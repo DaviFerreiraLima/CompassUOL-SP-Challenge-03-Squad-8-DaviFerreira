@@ -5,6 +5,16 @@ server:
 spring:
   application:
     name: ms-products
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    template:
+      routing-key: email_routing_key
+      exchange: email_exchange
+      default-receive-queue: ms-email
+
 
   datasource:
     url: jdbc:mysql://localhost:3306/challenge3
@@ -14,20 +24,8 @@ spring:
       open-in-view: true
 
 
-  ## configuração do rabbitmq
-  #rabbitmq:
-  # host: localhost
-  # port: 5672
-  # username: guest
-  # password: guest
-#  listener:
-#    simple:
-#      retry:
-#        enabled: true
-#        max-attempts: 3
-#        initial-interval: 5000
-#        multiplier: 1
-#        max-interval: 300000
+
+
 
 #eureka:
 #  client:
