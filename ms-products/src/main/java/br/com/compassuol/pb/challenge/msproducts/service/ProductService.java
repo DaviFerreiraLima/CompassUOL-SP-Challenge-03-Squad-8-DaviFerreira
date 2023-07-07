@@ -5,7 +5,6 @@ import br.com.compassuol.pb.challenge.msproducts.entity.Category;
 import br.com.compassuol.pb.challenge.msproducts.entity.Product;
 import br.com.compassuol.pb.challenge.msproducts.exception.ProductAPIException;
 import br.com.compassuol.pb.challenge.msproducts.exception.ResourceNotFoundException;
-import br.com.compassuol.pb.challenge.msproducts.payload.CategoryDto;
 import br.com.compassuol.pb.challenge.msproducts.payload.ProductDto;
 import br.com.compassuol.pb.challenge.msproducts.payload.ProductResponse;
 import br.com.compassuol.pb.challenge.msproducts.repository.CategoryRepository;
@@ -17,7 +16,6 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -96,7 +94,7 @@ public class ProductService {
 
 
 
-    private Set<Category> getCategoriesByIds(Set<Category> categories) throws ResourceNotFoundException {
+    private Set<Category> getCategoriesByIds(Set<Category> categories) {
         Set<Category> result = new HashSet<>();
 
         for (Category category : categories) {
@@ -104,7 +102,6 @@ public class ProductService {
                     .orElseThrow(() -> new ResourceNotFoundException("Category", "id", category.getId()));
             result.add(foundCategory);
         }
-
         return result;
     }
 

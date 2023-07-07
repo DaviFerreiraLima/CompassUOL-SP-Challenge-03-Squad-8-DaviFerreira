@@ -54,13 +54,10 @@ public class UserService {
     }
 
     public UserDto getUserById(long userId){
-        var user = userRepository.findById(userId);
-        if (user==null){
-            throw  new ResourceNotFoundException("User","id",userId);
-        }
+        var user = userRepository.findById(userId)
+                .orElseThrow(()->new ResourceNotFoundException("User","id",userId));
         return mapper.map(user,UserDto.class);
     }
-
     public UserDto updateUser(long userId, UserDto userDto){
 
         var user = userRepository.findById(userId)
@@ -70,12 +67,10 @@ public class UserService {
         user = mapper.map(userDto, User.class);
         user.setId(userId);
         user.setRoles(roles);
-
         var email = buildEmail(user.getEmail());
 
         email.setSubject("UPDATED ACCOUNT");
         email.setBody("Your account information has been updated");
-
         var newUser = userRepository.save(user);
         producer.sendMessage(email);
         return mapper.map(newUser,UserDto.class);
@@ -90,7 +85,6 @@ public class UserService {
         }
         return existingRolesList;
     }
-
     private EmailDto buildEmail(String email){
         var emailDto = new EmailDto();
         emailDto.setFromEmail("challengecompass1@gmail.com");
@@ -100,7 +94,6 @@ public class UserService {
         emailDto.setBody("");
         emailDto.setSubject("");
         emailDto.setContentType("text/plain");
-
         return  emailDto;
     }
 }
