@@ -19,7 +19,7 @@ public class ProductDto {
 
     private long id;
 
-    @NotBlank(message = "The product date should not be empty")
+    @NotNull(message = "The product date should not be empty")
     private OffsetDateTime date;
 
     @NotBlank(message = "The product name should not be empty")
@@ -34,7 +34,6 @@ public class ProductDto {
     @Column(name = "img_url")
     private String imgUrl;
 
-    @NotBlank(message = "The product price should not be null")
     @DecimalMin(value = "1",message = "The product price cant be less than 1")
     private BigDecimal price;
 
