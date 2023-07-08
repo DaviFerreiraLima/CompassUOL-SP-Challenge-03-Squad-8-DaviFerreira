@@ -17,10 +17,11 @@
                - Path=/api/**
              filters:
                - AuthenticationFilter
+
            - id: ms-authorization
              uri: http://localhost:8083/
              predicates:
-               - Path=/oauth/**
+               - Path=/oauth/token
   logging:
     level:
       web: debug

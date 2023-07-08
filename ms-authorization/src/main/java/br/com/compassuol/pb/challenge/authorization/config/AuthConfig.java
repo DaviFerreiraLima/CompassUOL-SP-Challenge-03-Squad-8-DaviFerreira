@@ -21,6 +21,7 @@ public class AuthConfig {
 
     private UserCredentialRepository userCredentialRepository;
 
+
     public AuthConfig( UserCredentialRepository userCredentialRepository) {
         this.userCredentialRepository = userCredentialRepository;
     }
@@ -34,7 +35,7 @@ public class AuthConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests((authorize) ->
-                        authorize.requestMatchers("/token","/validate").permitAll()
+                        authorize.requestMatchers("/token").permitAll()
                         );
         return http.build();
     }

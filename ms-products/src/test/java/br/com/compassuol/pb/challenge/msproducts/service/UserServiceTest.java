@@ -57,7 +57,7 @@ class UserServiceTest {
     void CreateUserProductAPIException(){
         var userDto = userUtils.createUserDto();
         var user = userUtils.createUser();
-        when(userRepository.findByEmail(userDto.getEmail())).thenReturn(user);
+        when(userRepository.findByEmail(userDto.getEmail())).thenReturn(Optional.of(user));
 
         assertThrows(ProductAPIException.class,()-> userService.createUser(userDto));
     }

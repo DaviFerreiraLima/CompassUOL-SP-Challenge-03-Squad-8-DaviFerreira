@@ -1,38 +1,35 @@
 package br.com.compassuol.pb.challenge.apigateway.filter;
 
 import br.com.compassuol.pb.challenge.apigateway.util.JwtUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.server.ServerHttpRequest;
+import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
-
-import java.util.Objects;
+import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
 public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
-
     private RouteValidator validator;
 
-    //private RestTemplate template;
 
     private JwtUtil jwtUtil;
 
-    public AuthenticationFilter(RouteValidator validator, JwtUtil jwtUtil) {
-        this.validator = validator;
-        this.jwtUtil = jwtUtil;
-    }
 
-    public AuthenticationFilter() {
+    public AuthenticationFilter(RouteValidator validator, RestTemplate template, JwtUtil jwtUtil) {
         super(Config.class);
+        this.validator=validator;
+        this.jwtUtil=jwtUtil;
     }
 
     @Override
     public GatewayFilter apply(Config config) {
         return ((exchange, chain) -> {
-            if ( validator!=null && validator.isSecured.test(exchange.getRequest())) {
-                //header contains token or not
+            ServerHttpRequest request = null;
+            if (validator.isSecured.test(exchange.getRequest())) {
+
                 if (!exchange.getRequest().getHeaders().containsKey(HttpHeaders.AUTHORIZATION)) {
                     throw new RuntimeException("missing authorization header");
                 }
@@ -42,17 +39,25 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
                     authHeader = authHeader.substring(7);
                 }
                 try {
+
                     jwtUtil.validateToken(authHeader);
+
+                    request =exchange.getRequest()
+                            .mutate()
+                            .header("username", jwtUtil.getUsername(authHeader))
+                            .build();
+                    jwtUtil.getUsername(authHeader);
                 } catch (Exception e) {
                     System.out.println("invalid access...!");
                     throw new RuntimeException("un authorized access to application");
                 }
             }
-            return chain.filter(exchange);
+            return chain.filter(exchange.mutate().request(request).build());
         });
     }
 
     public static class Config{
 
     }
+
 }

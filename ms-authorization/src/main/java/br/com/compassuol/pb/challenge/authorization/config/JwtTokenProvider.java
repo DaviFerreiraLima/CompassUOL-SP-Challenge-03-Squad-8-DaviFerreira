@@ -21,15 +21,12 @@ public class JwtTokenProvider {
 
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
-    //@Value("${app.jwt-secret}")
-    private String jwtSecret = SECRET;
+    private final String jwtSecret = SECRET;
 
     public String generateJwtToken(Authentication authentication){
         var username = authentication.getName();
-
         var currentDate = new Date();
-        long jwtExpirationDate = 1000 * 60 * 30;
-        var expireDate = new Date(currentDate.getTime() + jwtExpirationDate);
+        var expireDate = new Date(currentDate.getTime() + 604800000);
 
         return Jwts.builder()
                 .setSubject(username)

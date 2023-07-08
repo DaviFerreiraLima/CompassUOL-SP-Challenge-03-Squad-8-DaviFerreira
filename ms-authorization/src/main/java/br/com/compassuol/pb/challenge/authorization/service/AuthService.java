@@ -28,7 +28,4 @@ public class AuthService {
         return jwtTokenProvider.generateJwtToken(authentication);
     }
 
-    public void validateToken(String token){
-        jwtTokenProvider.validateToken(token);
-    }
 }

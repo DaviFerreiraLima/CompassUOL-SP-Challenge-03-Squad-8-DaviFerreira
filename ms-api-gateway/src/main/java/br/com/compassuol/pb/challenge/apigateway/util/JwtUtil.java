@@ -1,10 +1,7 @@
 package br.com.compassuol.pb.challenge.apigateway.util;
 
 import br.com.compassuol.pb.challenge.apigateway.exception.ProductAPIException;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.MalformedJwtException;
-import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -18,7 +15,7 @@ public class JwtUtil {
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
     //@Value("${app.jwt-secret}")
-    private String jwtSecret = SECRET;
+    private final String jwtSecret = SECRET;
 
 
     private Key key(){
