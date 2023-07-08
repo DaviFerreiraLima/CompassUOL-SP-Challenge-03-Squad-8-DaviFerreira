@@ -1,25 +1,40 @@
-package br.com.compassuol.pb.challenge.apigateway.util;
+package br.com.compassuol.pb.challenge.msproducts.security;
 
-import br.com.compassuol.pb.challenge.apigateway.exception.ProductAPIException;
-import io.jsonwebtoken.*;
+import br.com.compassuol.pb.challenge.msproducts.exception.ProductAPIException;
+import io.jsonwebtoken.ExpiredJwtException;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.MalformedJwtException;
+import io.jsonwebtoken.UnsupportedJwtException;
+import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
 
 import java.nio.charset.StandardCharsets;
 import java.security.Key;
-
-import java.util.function.Function;
+import java.util.Date;
 
 @Component
-public class JwtUtil {
+public class JwtTokenProvider {
 
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
-
-    //@Value("${app.jwt-secret}")
     private final String jwtSecret = SECRET;
 
 
+    public String generateJwtToken(Authentication authentication){
+        var username = authentication.getName();
+
+        var currentDate = new Date();
+        var expireDate = new Date(currentDate.getTime() + 604800000);
+
+        return Jwts.builder()
+                .setSubject(username)
+                .setIssuedAt(new Date())
+                .setExpiration(expireDate)
+                .signWith(key())
+                .compact();
+    }
     private Key key(){
         byte[] keyBytes = SECRET.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
@@ -36,7 +51,6 @@ public class JwtUtil {
     }
 
     public boolean validateToken(String token){
-
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key())

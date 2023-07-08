@@ -6,6 +6,7 @@ import br.com.compassuol.pb.challenge.msproducts.service.RoleService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,7 +21,7 @@ public class RoleController {
     public RoleController(RoleService roleService) {
         this.roleService = roleService;
     }
-
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<RoleDto> createProduct(@RequestBody @Valid RoleDto roleDto){
         return new ResponseEntity<>(roleService.createRole(roleDto), HttpStatus.CREATED);
