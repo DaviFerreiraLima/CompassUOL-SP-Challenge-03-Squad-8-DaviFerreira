@@ -27,7 +27,7 @@ public class AuthController {
         if (authenticate.isAuthenticated()){
             return authService.login(authRequest);
         }else {
-            return " invalid authentication";
+            return "Invalid Authentication";
         }
     }
 

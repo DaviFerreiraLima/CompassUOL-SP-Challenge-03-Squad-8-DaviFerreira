@@ -2,7 +2,6 @@ package br.com.compassuol.pb.challenge.authorization.config;
 
 import br.com.compassuol.pb.challenge.authorization.exception.ResourceNotFoundException;
 import br.com.compassuol.pb.challenge.authorization.repository.UserCredentialRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -18,7 +17,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws ResourceNotFoundException {
 
         var user = userCredentialRepository.findByEmail(email);
 
