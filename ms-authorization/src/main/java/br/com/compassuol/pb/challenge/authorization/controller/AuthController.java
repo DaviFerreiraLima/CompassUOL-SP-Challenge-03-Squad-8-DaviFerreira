@@ -1,12 +1,12 @@
 package br.com.compassuol.pb.challenge.authorization.controller;
 
-import br.com.compassuol.pb.challenge.authorization.exception.ProductAPIException;
 import br.com.compassuol.pb.challenge.authorization.payload.AuthRequest;
 import br.com.compassuol.pb.challenge.authorization.service.AuthService;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 
