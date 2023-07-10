@@ -1,0 +1,28 @@
+  server:
+    port: 8080
+
+  spring:
+    application:
+      name: api-gateway
+    cloud:
+      gateway:
+        discovery:
+          locator:
+            enabled: true
+            lower-case-service-id: true
+        routes:
+           - id: ms-products
+             uri: http://localhost:8081
+             predicates:
+               - Path=/api/**
+             filters:
+               - AuthenticationFilter
+
+           - id: ms-authorization
+             uri: http://localhost:8083/
+             predicates:
+               - Path=/oauth/token
+  logging:
+    level:
+      web: debug
+

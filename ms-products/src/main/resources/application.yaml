@@ -1,0 +1,27 @@
+server:
+  port: 8081
+  servlet:
+    context-path: /api
+spring:
+  application:
+    name: ms-products
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+    template:
+      routing-key: email_routing_key
+      exchange: email_exchange
+      default-receive-queue: ms-email
+  datasource:
+    url: jdbc:mysql://localhost:3306/challenge3
+    username: root
+    password: 1234
+  jpa:
+      open-in-view: true
+
+
+logging:
+  level:
+    web: debug
