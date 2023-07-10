@@ -57,3 +57,21 @@ SET @adminId = (SELECT id FROM role WHERE name = 'ROLE_ADMIN');
 
 INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM user WHERE email = 'bob@gmail.com'), @operatorId);
 INSERT INTO user_role (user_id, role_id) VALUES ((SELECT id FROM user WHERE email = 'bob@gmail.com'), @adminId);
+
+
+INSERT INTO category (name) VALUES ('Electronics');
+INSERT INTO category (name) VALUES ('Clothing');
+INSERT INTO category (name) VALUES ('Home');
+
+INSERT INTO product (date, description, name, img_url, price)
+VALUES ('2023-01-01', 'Smartphone with high-performance specifications', 'Smartphone X', 'https://example.com/smartphone.jpg', 999.99);
+INSERT INTO product (date, description, name, img_url, price)
+VALUES ('2023-02-01', 'Comfortable and stylish t-shirt', 'T-Shirt', 'https://example.com/tshirt.jpg', 29.99);
+INSERT INTO product (date, description, name, img_url, price)
+VALUES ('2023-03-01', 'Durable and practical kitchen utensils set', 'Kitchen Utensils', 'https://example.com/kitchenutensils.jpg', 49.99);
+
+
+INSERT INTO product_category (product_id, category_id) VALUES (1, 1);
+INSERT INTO product_category (product_id, category_id) VALUES (1, 2);
+INSERT INTO product_category (product_id, category_id) VALUES (2, 2);
+INSERT INTO product_category (product_id, category_id) VALUES (3, 3);
