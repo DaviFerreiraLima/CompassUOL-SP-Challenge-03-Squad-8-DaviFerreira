@@ -35,17 +35,6 @@ spring:
             enable: true
         auth: true
 
-
-
-
-
-
-
-#eureka:
-#  client:
-#    service-url:
-#      defaultZone: http://localhost:8080/api/eureka
-
 logging:
   level:
     web: debug

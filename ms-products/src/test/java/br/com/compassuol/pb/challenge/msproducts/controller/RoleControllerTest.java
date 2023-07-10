@@ -1,11 +1,8 @@
 package br.com.compassuol.pb.challenge.msproducts.controller;
 
-import br.com.compassuol.pb.challenge.msproducts.payload.ProductDto;
 import br.com.compassuol.pb.challenge.msproducts.payload.RoleDto;
-import br.com.compassuol.pb.challenge.msproducts.service.ProductService;
 import br.com.compassuol.pb.challenge.msproducts.service.RoleService;
 import br.com.compassuol.pb.challenge.msproducts.utils.ControllerUtils;
-import br.com.compassuol.pb.challenge.msproducts.utils.ProductUtil;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

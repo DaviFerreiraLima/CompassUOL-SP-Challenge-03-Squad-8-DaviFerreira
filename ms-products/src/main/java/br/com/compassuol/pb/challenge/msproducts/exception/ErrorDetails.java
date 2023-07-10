@@ -1,4 +1,4 @@
-package br.com.compassuol.pb.challenge.msproducts.payload;
+package br.com.compassuol.pb.challenge.msproducts.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

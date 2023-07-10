@@ -4,17 +4,17 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class ProductAPIException extends RuntimeException {
+public class AuthorizationAPIException extends RuntimeException {
 
     private HttpStatus status;
     private String message;
 
-    public ProductAPIException(HttpStatus status,String message) {
+    public AuthorizationAPIException(HttpStatus status, String message) {
         this.message =message;
         this.status=status;
     }
 
-    public ProductAPIException(HttpStatus status, String message,String message1) {
+    public AuthorizationAPIException(HttpStatus status, String message, String message1) {
         super(message);
         this.status = status;
         this.message = message1;

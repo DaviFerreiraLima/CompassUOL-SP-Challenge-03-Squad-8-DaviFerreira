@@ -1,28 +1,21 @@
 package br.com.compassuol.pb.challenge.msproducts.controller;
 
-import br.com.compassuol.pb.challenge.msproducts.entity.Category;
 import br.com.compassuol.pb.challenge.msproducts.exception.ProductAPIException;
 import br.com.compassuol.pb.challenge.msproducts.exception.ResourceNotFoundException;
-import br.com.compassuol.pb.challenge.msproducts.payload.CategoryDto;
 import br.com.compassuol.pb.challenge.msproducts.payload.ProductDto;
 import br.com.compassuol.pb.challenge.msproducts.payload.ProductResponse;
-import br.com.compassuol.pb.challenge.msproducts.service.CategoryService;
 import br.com.compassuol.pb.challenge.msproducts.service.ProductService;
 import br.com.compassuol.pb.challenge.msproducts.utils.ControllerUtils;
-import br.com.compassuol.pb.challenge.msproducts.utils.ProductUtil;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import br.com.compassuol.pb.challenge.msproducts.utils.ProductUtils;
 import org.junit.jupiter.api.Test;
-import org.mockito.stubbing.OngoingStubbing;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.yaml.snakeyaml.events.Event;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
@@ -46,7 +39,7 @@ class ProductControllerTest {
 
     @Test
     void createProductSuccess() throws Exception{
-        var productDto = ProductUtil.createProductDto();
+        var productDto = ProductUtils.createProductDto();
 
         when(productService.createProduct(any(ProductDto.class))).thenReturn(productDto);
 
@@ -79,7 +72,7 @@ class ProductControllerTest {
 
     @Test
     void getProductByIdSuccess() throws Exception {
-        var productDto = ProductUtil.createProductDto();
+        var productDto = ProductUtils.createProductDto();
 
         when(productService.getProductById(anyLong())).thenReturn(productDto);
 
@@ -164,7 +157,7 @@ class ProductControllerTest {
     @Test
     void updateProductSuccess() throws Exception {
 
-        var productDto = ProductUtil.createProductDto();
+        var productDto = ProductUtils.createProductDto();
 
         when(productService.updateProduct(anyLong(),any(ProductDto.class))).thenReturn(productDto);
 
@@ -183,7 +176,7 @@ class ProductControllerTest {
     @Test
 
     void updateProductProductAPIException() throws Exception {
-        var productDto = ProductUtil.createProductDto();
+        var productDto = ProductUtils.createProductDto();
         when(productService.updateProduct(1L,productDto)).thenThrow(new ResourceNotFoundException("Product", "id", 1L));
 
         var result = mockMvc.perform(put(ID_URL)

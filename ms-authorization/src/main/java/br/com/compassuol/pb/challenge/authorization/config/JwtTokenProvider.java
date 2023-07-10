@@ -1,13 +1,12 @@
 package br.com.compassuol.pb.challenge.authorization.config;
 
-import br.com.compassuol.pb.challenge.authorization.exception.ProductAPIException;
+
+import br.com.compassuol.pb.challenge.authorization.exception.AuthorizationAPIException;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Component;
@@ -21,10 +20,9 @@ public class JwtTokenProvider {
 
     public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
-    private final String jwtSecret = SECRET;
-
-    public String generateJwtToken(Authentication authentication){
+    public String generateJwtToken(Authentication authentication) {
         var username = authentication.getName();
+
         var currentDate = new Date();
         var expireDate = new Date(currentDate.getTime() + 604800000);
 
@@ -36,12 +34,12 @@ public class JwtTokenProvider {
                 .compact();
     }
 
-    private Key key(){
+    private Key key() {
         byte[] keyBytes = SECRET.getBytes(StandardCharsets.UTF_8);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 
-    public String getUsername(String token){
+    public String getUsername(String token) {
         var claims = Jwts.parserBuilder()
                 .setSigningKey(key())
                 .build()
@@ -51,22 +49,17 @@ public class JwtTokenProvider {
         return claims.getSubject();
     }
 
-    public boolean validateToken(String token){
-
+    public boolean validateToken(String token) {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key())
                     .build()
                     .parse(token);
             return true;
-        }catch (MalformedJwtException ex) {
-            throw new ProductAPIException(HttpStatus.BAD_REQUEST, "Invalid JWT token");
+        } catch (MalformedJwtException ex) {
+            throw new AuthorizationAPIException(HttpStatus.BAD_REQUEST, "Invalid JWT token");
         } catch (ExpiredJwtException ex) {
-            throw new ProductAPIException(HttpStatus.BAD_REQUEST, "Expired JWT token");
-        } catch (UnsupportedJwtException ex) {
-            throw new ProductAPIException(HttpStatus.BAD_REQUEST, "Unsupported JWT token");
-        } catch (IllegalArgumentException ex) {
-            throw new ProductAPIException(HttpStatus.BAD_REQUEST, "JWT claims string is empty.");
+            throw new AuthorizationAPIException(HttpStatus.BAD_REQUEST, "Expired JWT token");
         }
     }
 }

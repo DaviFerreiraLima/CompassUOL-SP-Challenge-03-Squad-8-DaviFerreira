@@ -1,6 +1,5 @@
-package br.com.compassuol.pb.challenge.msproducts.security;
+package br.com.compassuol.pb.challenge.authorization.config;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,15 +10,13 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import java.util.Collections;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
+
 @ExtendWith(MockitoExtension.class)
 class JwtTokenProviderTest {
 
     @InjectMocks
     private JwtTokenProvider jwtTokenProvider;
-
-
     @Test
     public void validateTokenSuccess() {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
@@ -31,7 +28,7 @@ class JwtTokenProviderTest {
 
         String username = jwtTokenProvider.getUsername(token);
 
-       assertEquals("bob@gmail.com", username);
+        assertEquals("bob@gmail.com", username);
     }
 
 
@@ -39,7 +36,7 @@ class JwtTokenProviderTest {
     public void validateTokenInvalidToken() {
         String token = "invalid";
 
-       assertThrows(Exception.class, () -> jwtTokenProvider.validateToken(token));
+        assertThrows(Exception.class, () -> jwtTokenProvider.validateToken(token));
     }
 
 
