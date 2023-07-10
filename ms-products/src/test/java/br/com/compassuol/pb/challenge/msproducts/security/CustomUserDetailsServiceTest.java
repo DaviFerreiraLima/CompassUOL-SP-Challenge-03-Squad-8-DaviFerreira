@@ -20,7 +20,6 @@ import java.util.Optional;
 import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
@@ -44,11 +43,11 @@ class CustomUserDetailsServiceTest {
 
         UserDetails userDetails = customUserDetailsService.loadUserByUsername(email);
 
-        Assertions.assertEquals(email, userDetails.getUsername());
-        Assertions.assertEquals(password, userDetails.getPassword());
+        assertEquals(email, userDetails.getUsername());
+        assertEquals(password, userDetails.getPassword());
 
         Set<GrantedAuthority> expectedAuthorities = Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"));
-        Assertions.assertEquals(expectedAuthorities, userDetails.getAuthorities());
+        assertEquals(expectedAuthorities, userDetails.getAuthorities());
 
         verify(userRepository).findByEmail(email);
     }
@@ -58,7 +57,7 @@ class CustomUserDetailsServiceTest {
         String email = "nonexisting@gmail.com";
         when(userRepository.findByEmail(email)).thenReturn(Optional.empty());
 
-        Assertions.assertThrows(UsernameNotFoundException.class,
+        assertThrows(UsernameNotFoundException.class,
                 () -> customUserDetailsService.loadUserByUsername(email));
 
         verify(userRepository).findByEmail(email);

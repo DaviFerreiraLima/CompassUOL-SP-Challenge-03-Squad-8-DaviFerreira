@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-public class productUtil {
+public class ProductUtil {
 
     public  static Product createProduct(){
         var category = new Category();
@@ -46,7 +46,7 @@ public class productUtil {
 
     public static List<Product> createProductList(){
         List<Product> productList = new ArrayList<>();
-        productList.add(productUtil.createProduct());
+        productList.add(ProductUtil.createProduct());
         return productList;
     }
 }

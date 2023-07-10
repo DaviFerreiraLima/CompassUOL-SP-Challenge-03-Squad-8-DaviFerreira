@@ -7,7 +7,7 @@ import br.com.compassuol.pb.challenge.msproducts.exception.ResourceNotFoundExcep
 import br.com.compassuol.pb.challenge.msproducts.payload.ProductDto;
 import br.com.compassuol.pb.challenge.msproducts.repository.CategoryRepository;
 import br.com.compassuol.pb.challenge.msproducts.repository.ProductRepository;
-import br.com.compassuol.pb.challenge.msproducts.utils.productUtil;
+import br.com.compassuol.pb.challenge.msproducts.utils.ProductUtil;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,13 +15,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.PageRequest;
 
-import java.math.BigDecimal;
-import java.time.OffsetDateTime;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Optional;
 
@@ -47,12 +42,11 @@ class ProductServiceTest {
 
     @Test
     void createProductSuccess() {
-        // Create a mock category with ID 1
         var category = new Category();
         category.setId(1);
 
-        var newProduct = productUtil.createProduct();
-        var productDto = productUtil.createProductDto();
+        var newProduct = ProductUtil.createProduct();
+        var productDto = ProductUtil.createProductDto();
         var categories = new HashSet<Category>();
         categories.add(category);
         newProduct.setCategories(categories);
@@ -72,8 +66,8 @@ class ProductServiceTest {
 
     @Test
     void CreateProductByIdProductAPIException(){
-        var productDto = productUtil.createProductDto();
-        var product = productUtil.createProduct();
+        var productDto = ProductUtil.createProductDto();
+        var product = ProductUtil.createProduct();
         when(productRepository.findByName(product.getName())).thenReturn(product);
 
         assertThrows(ProductAPIException.class,() -> productService.createProduct(productDto));
@@ -82,8 +76,8 @@ class ProductServiceTest {
 
     @Test
     void getProductByIdSuccess() {
-        var productDto = productUtil.createProductDto();
-        var product = productUtil.createProduct();
+        var productDto = ProductUtil.createProductDto();
+        var product = ProductUtil.createProduct();
 
 
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
@@ -104,9 +98,9 @@ class ProductServiceTest {
 
     @Test
     void getAllProducts() {
-        var pageRequest = productUtil.createPageRequest();
+        var pageRequest = ProductUtil.createPageRequest();
 
-        var productList = productUtil.createProductList();
+        var productList = ProductUtil.createProductList();
         var productPag = new PageImpl<>(productList,pageRequest,productList.size());
         when(productRepository.findAll(pageRequest)).thenReturn(productPag);
 
@@ -140,8 +134,8 @@ class ProductServiceTest {
     @Test
     void updateProductSuccess() {
         long productId = 1L;
-        var newProduct = productUtil.createProduct();
-        var productDto = productUtil.createProductDto();
+        var newProduct = ProductUtil.createProduct();
+        var productDto = ProductUtil.createProductDto();
         var categories = new HashSet<Category>();
         var category = new Category();
         category.setId(1);

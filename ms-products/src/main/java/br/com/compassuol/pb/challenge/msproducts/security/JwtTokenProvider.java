@@ -5,7 +5,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
-import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -18,8 +17,7 @@ import java.util.Date;
 @Component
 public class JwtTokenProvider {
 
-    public static final String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
-    private final String jwtSecret = SECRET;
+    public static String SECRET = "5367566B59703373367639792F423F4528482B4D6251655468576D5A71347437";
 
 
     public String generateJwtToken(Authentication authentication){

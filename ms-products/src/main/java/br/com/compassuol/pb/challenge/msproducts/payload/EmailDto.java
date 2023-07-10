@@ -2,7 +2,10 @@ package br.com.compassuol.pb.challenge.msproducts.payload;
 
 import lombok.*;
 
-@Data
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class EmailDto {
     private String fromEmail;
     private String fromName;

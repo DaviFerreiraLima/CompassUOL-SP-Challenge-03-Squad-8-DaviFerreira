@@ -8,6 +8,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,6 +19,8 @@ import java.util.Collections;
 import static org.junit.jupiter.api.Assertions.*;
 @ExtendWith(MockitoExtension.class)
 class JwtTokenProviderTest {
+
+
 
     @InjectMocks
     private JwtTokenProvider jwtTokenProvider;
@@ -31,11 +34,11 @@ class JwtTokenProviderTest {
     }
 
     @Test
-    public void testGetUsername_ValidToken_ReturnsUsername() {
+    public void validateTokenSuccess() {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                "bob@gmail.com",    // Nome de usuário
-                null,           // Senha (não utilizada neste exemplo)
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))  // Autoridade/Permissão
+                "bob@gmail.com",
+                null,
+                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))
         );
         String token = jwtTokenProvider.generateJwtToken(authentication);
 
@@ -45,43 +48,27 @@ class JwtTokenProviderTest {
     }
 
 
-
-
     @Test
-    public void testValidateToken_ValidToken_ReturnsTrue() {
-        Authentication authentication = new UsernamePasswordAuthenticationToken(
-                "alice@gmail.com",  // Nome de usuário
-                null,               // Senha (não utilizada neste exemplo)
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))  // Autoridade/Permissão
-        );
-        String token = jwtTokenProvider.generateJwtToken(authentication);
-
-        boolean isValid = jwtTokenProvider.validateToken(token);
-
-        Assertions.assertTrue(isValid);
-    }
-
-    @Test
-    public void testValidateToken_InvalidToken_ThrowsException() {
+    public void validateTokenInvalidToken() {
         String token = "invalid-token";
 
-        Assertions.assertThrows(Exception.class, () -> jwtTokenProvider.validateToken(token));
+       assertThrows(Exception.class, () -> jwtTokenProvider.validateToken(token));
     }
 
 
 
     @Test
-    public void testValidateToken_TamperedToken_ThrowsException() {
+    public void validateTokenInvalidTokenTampered() {
         Authentication authentication = new UsernamePasswordAuthenticationToken(
-                "emma@gmail.com",   // Nome de usuário
-                null,               // Senha (não utilizada neste exemplo)
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))  // Autoridade/Permissão
+                "emma@gmail.com",
+                null,
+                Collections.singleton(new SimpleGrantedAuthority("ROLE_USER"))
         );
         String token = jwtTokenProvider.generateJwtToken(authentication);
 
-        // Alterar o token (adicionando um caractere ao final)
+
         String tamperedToken = token + "X";
 
-        Assertions.assertThrows(Exception.class, () -> jwtTokenProvider.validateToken(tamperedToken));
+        assertThrows(Exception.class, () -> jwtTokenProvider.validateToken(tamperedToken));
     }
 }

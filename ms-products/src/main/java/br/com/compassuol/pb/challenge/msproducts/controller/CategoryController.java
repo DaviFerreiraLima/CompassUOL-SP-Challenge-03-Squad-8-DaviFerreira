@@ -3,7 +3,6 @@ package br.com.compassuol.pb.challenge.msproducts.controller;
 import br.com.compassuol.pb.challenge.msproducts.payload.CategoryDto;
 import br.com.compassuol.pb.challenge.msproducts.service.CategoryService;
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;

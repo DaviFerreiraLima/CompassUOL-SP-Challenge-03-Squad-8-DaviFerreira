@@ -35,11 +35,12 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public UserDto createUser(UserDto userDto){
+    public UserDto createUser(UserDto userDto,String contentType){
         var existingUser = userRepository.findByEmail(userDto.getEmail());
         if (existingUser.isPresent()){
             throw new ProductAPIException(HttpStatus.BAD_REQUEST,"This User email is already registered");
         }
+
         var roles = getRolesByIds(userDto.getRoles());
 
         var newUser = mapper.map(userDto, User.class);
@@ -49,6 +50,7 @@ public class UserService {
         var email = buildEmail(newUser.getEmail());
         email.setSubject("CREATED ACCOUNT");
         email.setBody("Your account has been created");
+        email.setContentType(contentType);
 
         newUser = userRepository.save(newUser);
         producer.sendMessage(email);
@@ -61,11 +63,17 @@ public class UserService {
                 .orElseThrow(()->new ResourceNotFoundException("User","id",userId));
         return mapper.map(user,UserDto.class);
     }
-    public UserDto updateUser(long userId, UserDto userDto){
+    public UserDto updateUser(long userId, UserDto userDto,String contentType){
 
         var user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("User","id",userId));
         var roles = getRolesByIds(userDto.getRoles());
+
+
+        var existingEmail = userRepository.findByEmail(userDto.getEmail());
+        if (existingEmail.isPresent()) {
+            throw new ProductAPIException(HttpStatus.BAD_REQUEST,"This User email is already registered");
+        }
 
         user = mapper.map(userDto, User.class);
         user.setId(userId);
@@ -74,6 +82,8 @@ public class UserService {
 
         email.setSubject("UPDATED ACCOUNT");
         email.setBody("Your account information has been updated");
+        email.setContentType(contentType);
+
         var newUser = userRepository.save(user);
         producer.sendMessage(email);
         return mapper.map(newUser,UserDto.class);

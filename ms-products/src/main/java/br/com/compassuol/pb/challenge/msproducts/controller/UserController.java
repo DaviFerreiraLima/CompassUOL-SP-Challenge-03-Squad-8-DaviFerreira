@@ -14,28 +14,26 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private UserService userService;
-    private RabbitMQProducer producer;
 
-    public UserController(UserService userService, RabbitMQProducer producer) {
+    public UserController(UserService userService) {
         this.userService = userService;
-        this.producer = producer;
     }
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto userDto){
-        return new ResponseEntity<>(userService.createUser(userDto), HttpStatus.CREATED);
+    public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto userDto,
+                                              @RequestHeader("X-Content-Type") String contentType){
+        return new ResponseEntity<>(userService.createUser(userDto,contentType), HttpStatus.CREATED);
     }
-
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{id}")
     public ResponseEntity<UserDto> getUserById(@PathVariable(value = "id") long userId){
         return new ResponseEntity<>(userService.getUserById(userId),HttpStatus.OK);
     }
-
     @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateProduct(@PathVariable(value = "id") long userId, @RequestBody @Valid UserDto userDto){
-        return new ResponseEntity<>(userService.updateUser(userId,userDto),HttpStatus.OK);
+    public ResponseEntity<UserDto> updateProduct(@PathVariable(value = "id") long userId, @RequestBody @Valid UserDto userDto,
+                                                @RequestHeader("X-Content-Type") String contentType){
+        return new ResponseEntity<>(userService.updateUser(userId,userDto,contentType),HttpStatus.OK);
     }
 }

@@ -58,8 +58,9 @@ class CategoryServiceTest {
 
         var categoriesDto = categoryService.findAllCategories();
 
-        verify(categoryRepository).findAll();
         assertEquals(1,categoriesDto.size());
         assertEquals(categories.get(0).getName(),categoriesDto.get(0).getName());
+        verify(categoryRepository).findAll();
+
     }
 }

@@ -14,8 +14,6 @@ spring:
       routing-key: email_routing_key
       exchange: email_exchange
       default-receive-queue: ms-email
-
-
   datasource:
     url: jdbc:mysql://localhost:3306/challenge3
     username: root
@@ -23,14 +21,6 @@ spring:
   jpa:
       open-in-view: true
 
-
-
-
-
-#eureka:
-#  client:
-#    service-url:
-#      defaultZone: http://localhost:8080/api/eureka
 
 logging:
   level:

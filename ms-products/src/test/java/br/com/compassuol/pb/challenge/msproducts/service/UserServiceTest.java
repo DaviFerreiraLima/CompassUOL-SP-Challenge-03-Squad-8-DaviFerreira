@@ -7,7 +7,7 @@ import br.com.compassuol.pb.challenge.msproducts.exception.ResourceNotFoundExcep
 import br.com.compassuol.pb.challenge.msproducts.publisher.RabbitMQProducer;
 import br.com.compassuol.pb.challenge.msproducts.repository.RoleRepository;
 import br.com.compassuol.pb.challenge.msproducts.repository.UserRepository;
-import br.com.compassuol.pb.challenge.msproducts.utils.userUtils;
+import br.com.compassuol.pb.challenge.msproducts.utils.UserUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -15,8 +15,8 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.HashSet;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +26,8 @@ import static org.mockito.Mockito.when;
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
 
-
+    @Mock
+    private PasswordEncoder passwordEncoder;
     @Mock
     private UserRepository userRepository;
     @Mock
@@ -42,29 +43,31 @@ class UserServiceTest {
 
     @Test
     void createUser() {
-        var userDto = userUtils.createUserDto();
-        var user = userUtils.createUser();
-
-
-        when(userRepository.findByEmail(userDto.getEmail())).thenReturn(null);
+        var userDto = UserUtils.createUserDto();
+        var user = UserUtils.createUser();
+        var role = new Role();
+        String contentType = "text/plain";
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.empty());
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        var response = userService.createUser(userDto);
+        var response = userService.createUser(userDto,contentType);
 
         assertEquals(userDto.getEmail(),response.getEmail());
     }
+
     @Test
     void CreateUserProductAPIException(){
-        var userDto = userUtils.createUserDto();
-        var user = userUtils.createUser();
+        var userDto = UserUtils.createUserDto();
+        var user = UserUtils.createUser();
+        String contentType = "text/plain";
         when(userRepository.findByEmail(userDto.getEmail())).thenReturn(Optional.of(user));
 
-        assertThrows(ProductAPIException.class,()-> userService.createUser(userDto));
+        assertThrows(ProductAPIException.class,()-> userService.createUser(userDto,contentType));
     }
     @Test
     void getUserByIdSuccess() {
-        var userDto = userUtils.createUserDto();
-        var user = userUtils.createUser();
+        var userDto = UserUtils.createUserDto();
+        var user = UserUtils.createUser();
         long userId = 1L;
 
         when(userRepository.findById(anyLong())).thenReturn(Optional.of(user));
@@ -76,7 +79,7 @@ class UserServiceTest {
 
     @Test
     void getUserByIdResourceNotFoundException() {
-        var userDto = userUtils.createUserDto();
+        var userDto = UserUtils.createUserDto();
         long userId = 1L;
 
         when(userRepository.findById(userId)).thenReturn(Optional.empty());
@@ -86,13 +89,13 @@ class UserServiceTest {
     @Test
     void updateUserSuccess() {
         long userId = 1L;
-        var user = userUtils.createUser();
-        var userDto = userUtils.createUserDto();
-
+        var user = UserUtils.createUser();
+        var userDto = UserUtils.createUserDto();
+        String contentType = "text/plain";
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
         when(userRepository.save(any(User.class))).thenReturn(user);
 
-        var response = userService.updateUser(userId,userDto);
+        var response = userService.updateUser(userId,userDto,contentType);
 
         assertEquals(userDto.getEmail(),response.getEmail());
     }
@@ -101,10 +104,23 @@ class UserServiceTest {
     void updateUserResourceNotFoundException() {
 
         long userId = 1L;
-        var userDto = userUtils.createUserDto();
-
+        var userDto = UserUtils.createUserDto();
+        String contentType = "text/plain";
         when(userRepository.findById(anyLong())).thenReturn(Optional.empty());
 
-        assertThrows(ResourceNotFoundException.class,() -> userService.updateUser(userId,userDto));
+        assertThrows(ResourceNotFoundException.class,() -> userService.updateUser(userId,userDto,contentType));
+    }
+
+    @Test
+    void updateUserProductApiException() {
+
+        long userId = 1L;
+        var user = UserUtils.createUser();
+        var userDto = UserUtils.createUserDto();
+        String contentType = "text/plain";
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+        when(userRepository.findByEmail(anyString())).thenReturn(Optional.of(user));
+
+        assertThrows(ProductAPIException.class,()-> userService.updateUser(userId,userDto,contentType));
     }
 }

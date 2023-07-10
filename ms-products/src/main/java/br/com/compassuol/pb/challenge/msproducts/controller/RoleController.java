@@ -23,7 +23,7 @@ public class RoleController {
     }
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
-    public ResponseEntity<RoleDto> createProduct(@RequestBody @Valid RoleDto roleDto){
+    public ResponseEntity<RoleDto> createRole(@RequestBody @Valid RoleDto roleDto){
         return new ResponseEntity<>(roleService.createRole(roleDto), HttpStatus.CREATED);
     }
 }

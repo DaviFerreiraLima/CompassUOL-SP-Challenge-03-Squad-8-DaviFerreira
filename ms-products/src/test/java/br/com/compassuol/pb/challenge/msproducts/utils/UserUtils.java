@@ -6,7 +6,7 @@ import br.com.compassuol.pb.challenge.msproducts.payload.UserDto;
 
 import java.util.HashSet;
 
-public class userUtils {
+public class UserUtils {
 
     public static UserDto createUserDto(){
         var user = new UserDto();
