@@ -21,7 +21,6 @@ spring:
   jpa:
       open-in-view: true
 
-
 logging:
   level:
     web: debug
