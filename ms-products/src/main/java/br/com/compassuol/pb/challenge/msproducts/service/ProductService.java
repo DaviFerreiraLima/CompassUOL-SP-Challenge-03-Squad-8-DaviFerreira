@@ -49,10 +49,8 @@ public class ProductService {
     }
 
     public ProductDto getProductById(long productId){
-        var product = productRepository.findById(productId);
-        if (product==null){
-            throw  new ResourceNotFoundException("Product","id",productId);
-        }
+        var product = productRepository.findById(productId).orElseThrow(
+                ()->  new ResourceNotFoundException("Product","id",productId));
         return mapper.map(product,ProductDto.class);
     }
 
@@ -82,6 +80,10 @@ public class ProductService {
         var product = productRepository.findById(productId)
                 .orElseThrow(() -> new ResourceNotFoundException("Product", "id", productId));
 
+        var existingProductName = productRepository.findByName(productDto.getName());
+        if (existingProductName !=null) {
+            throw new ProductAPIException(HttpStatus.BAD_REQUEST,"This Product name is already registered");
+        }
         var categories = getCategoriesByIds(productDto.getCategories());
 
         product = mapper.map(productDto, Product.class);

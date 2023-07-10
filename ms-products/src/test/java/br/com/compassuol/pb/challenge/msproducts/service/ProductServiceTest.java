@@ -7,7 +7,7 @@ import br.com.compassuol.pb.challenge.msproducts.exception.ResourceNotFoundExcep
 import br.com.compassuol.pb.challenge.msproducts.payload.ProductDto;
 import br.com.compassuol.pb.challenge.msproducts.repository.CategoryRepository;
 import br.com.compassuol.pb.challenge.msproducts.repository.ProductRepository;
-import br.com.compassuol.pb.challenge.msproducts.utils.ProductUtil;
+import br.com.compassuol.pb.challenge.msproducts.utils.ProductUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -45,8 +45,8 @@ class ProductServiceTest {
         var category = new Category();
         category.setId(1);
 
-        var newProduct = ProductUtil.createProduct();
-        var productDto = ProductUtil.createProductDto();
+        var newProduct = ProductUtils.createProduct();
+        var productDto = ProductUtils.createProductDto();
         var categories = new HashSet<Category>();
         categories.add(category);
         newProduct.setCategories(categories);
@@ -61,13 +61,13 @@ class ProductServiceTest {
 
         assertEquals(productDto.getName(), response.getName());
 
-
+        verify(productRepository).save(any(Product.class));
     }
 
     @Test
     void CreateProductByIdProductAPIException(){
-        var productDto = ProductUtil.createProductDto();
-        var product = ProductUtil.createProduct();
+        var productDto = ProductUtils.createProductDto();
+        var product = ProductUtils.createProduct();
         when(productRepository.findByName(product.getName())).thenReturn(product);
 
         assertThrows(ProductAPIException.class,() -> productService.createProduct(productDto));
@@ -76,8 +76,8 @@ class ProductServiceTest {
 
     @Test
     void getProductByIdSuccess() {
-        var productDto = ProductUtil.createProductDto();
-        var product = ProductUtil.createProduct();
+        var productDto = ProductUtils.createProductDto();
+        var product = ProductUtils.createProduct();
 
 
         when(productRepository.findById(1L)).thenReturn(Optional.of(product));
@@ -90,7 +90,7 @@ class ProductServiceTest {
     @Test
     void getProductByIdResourceNotFoundException(){
 
-        when(productRepository.findById(anyLong())).thenReturn(null);
+        when(productRepository.findById(anyLong())).thenReturn(Optional.empty());
 
         assertThrows(ResourceNotFoundException.class,() -> productService.getProductById(anyLong()));
         verify(productRepository).findById(anyLong());
@@ -98,9 +98,9 @@ class ProductServiceTest {
 
     @Test
     void getAllProducts() {
-        var pageRequest = ProductUtil.createPageRequest();
+        var pageRequest = ProductUtils.createPageRequest();
 
-        var productList = ProductUtil.createProductList();
+        var productList = ProductUtils.createProductList();
         var productPag = new PageImpl<>(productList,pageRequest,productList.size());
         when(productRepository.findAll(pageRequest)).thenReturn(productPag);
 
@@ -116,6 +116,8 @@ class ProductServiceTest {
                     assertEquals(1, response.getTotalPages());
                     assertEquals(true, response.isLast());
                 });
+
+        verify(productRepository).findAll(pageRequest);
     }
 
     @Test
@@ -134,8 +136,8 @@ class ProductServiceTest {
     @Test
     void updateProductSuccess() {
         long productId = 1L;
-        var newProduct = ProductUtil.createProduct();
-        var productDto = ProductUtil.createProductDto();
+        var newProduct = ProductUtils.createProduct();
+        var productDto = ProductUtils.createProductDto();
         var categories = new HashSet<Category>();
         var category = new Category();
         category.setId(1);

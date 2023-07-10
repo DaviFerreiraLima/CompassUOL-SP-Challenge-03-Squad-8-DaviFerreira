@@ -78,6 +78,7 @@ public class UserService {
         user = mapper.map(userDto, User.class);
         user.setId(userId);
         user.setRoles(roles);
+        user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         var email = buildEmail(user.getEmail());
 
         email.setSubject("UPDATED ACCOUNT");

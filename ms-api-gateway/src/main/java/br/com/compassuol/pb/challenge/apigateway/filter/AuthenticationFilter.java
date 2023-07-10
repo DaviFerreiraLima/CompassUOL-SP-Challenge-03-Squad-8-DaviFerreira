@@ -2,15 +2,12 @@ package br.com.compassuol.pb.challenge.apigateway.filter;
 
 import br.com.compassuol.pb.challenge.apigateway.exception.AccessDeniedException;
 import br.com.compassuol.pb.challenge.apigateway.util.JwtUtil;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cloud.gateway.filter.GatewayFilter;
 import org.springframework.cloud.gateway.filter.factory.AbstractGatewayFilterFactory;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.server.reactive.ServerHttpRequest;
 import org.springframework.stereotype.Component;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.reactive.function.client.WebClient;
 
 @Component
 public class AuthenticationFilter extends AbstractGatewayFilterFactory<AuthenticationFilter.Config> {
@@ -20,7 +17,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
     private JwtUtil jwtUtil;
 
 
-    public AuthenticationFilter(RouteValidator validator, RestTemplate template, JwtUtil jwtUtil) {
+    public AuthenticationFilter(RouteValidator validator, JwtUtil jwtUtil) {
         super(Config.class);
         this.validator=validator;
         this.jwtUtil=jwtUtil;
@@ -46,7 +43,7 @@ public class AuthenticationFilter extends AbstractGatewayFilterFactory<Authentic
 
                     request =exchange.getRequest()
                             .mutate()
-                            .header("username", jwtUtil.getUsername(authHeader))
+                            .header("Authorization", "Bearer "+authHeader)
                             .build();
                     jwtUtil.getUsername(authHeader);
                 } catch (Exception e) {
